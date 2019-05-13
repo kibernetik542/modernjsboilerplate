@@ -1,3 +1,4 @@
+//#region SELECTORS
 // Query and remove first element
 // const p = document.querySelector('p')
 // p.remove()
@@ -15,40 +16,58 @@
 // newParagraph.textContent = 'This is a new element'
 // document.querySelector('body').appendChild(newParagraph)
 
-const notes = [{
-        title: 'B FC Barcelona',
-        body: 'Leo Messi is the best player FC'
-    },
-    {
-        title: 'A FC Juventus',
-        body: 'C.Ronaldo is the best player FC'
-    },
-    {
-        title: 'Man Utd CF',
-        body: 'Rooney is the best of reds CF'
-    }
-]
+// const notes = [{
+//         title: 'B FC Barcelona',
+//         body: 'Leo Messi is the best player FC'
+//     },
+//     {
+//         title: 'A FC Juventus',
+//         body: 'C.Ronaldo is the best player FC'
+//     },
+//     {
+//         title: 'Man Utd CF',
+//         body: 'Rooney is the best of reds CF'
+//     }
+// ]
+
+//#endregion
+
+//#region LOCAL STORAGE EXAMPLE
+// console.log(localStorage.getItem('location'))
+// localStorage.removeItem('location')
+// localStorage.clear()
+
+// const user = {
+//     name: 'Anna',
+//     age: 25
+// }
+
+// const userJson = JSON.stringify(user)
+// console.log(userJson)
+// // localStorage.setItem('user', userJson)
+// const userJson = localStorage.getItem('user')
+// const user = JSON.parse(userJson)
+// console.log(`${user.name} ${user.age}`)
+//localStorage.setItem('location', 'Prague')
+//#endregion
+
+const notes = getSavedNotes()
 
 const filters = {
     searchText: ''
 }
 
-const renderNotes = (notes, filters) => {
-    const filteredNotes = notes.filter(n => n.title.toLowerCase().includes(filters.searchText.toLowerCase()))
-
-    document.querySelector('#notes').innerHTML = ''
-
-    filteredNotes.forEach(n => {
-        const noteEl = document.createElement('p')
-        noteEl.textContent = n.title
-        document.querySelector('#notes').appendChild(noteEl)
-    })
-}
-
 renderNotes(notes, filters)
 
 document.querySelector('#add-note').addEventListener('click', function (e) {
-    e.target.textContent = 'Clicked'
+    notes.push({
+        // id: Math.random().toString(26).slice(2),
+        id: uuid(),
+        title: '',
+        body: ''
+    })
+    saveNotes(notes)
+    renderNotes(notes, filters)
 })
 
 // document.querySelector('#remove-note').addEventListener('click', function () {
