@@ -50,6 +50,7 @@
 // console.log(`${user.name} ${user.age}`)
 //localStorage.setItem('location', 'Prague')
 //#endregion
+'use strict'
 
 let notes = getSavedNotes()
 
@@ -60,7 +61,7 @@ const filters = {
 
 renderNotes(notes, filters)
 
-document.querySelector('#add-note').addEventListener('click', function (e) {
+document.querySelector('#add-note').addEventListener('click', (e) => {
     const timestamp = moment().valueOf()
     notes.push({
         // id: Math.random().toString(26).slice(2),
@@ -78,17 +79,17 @@ document.querySelector('#add-note').addEventListener('click', function (e) {
 //     document.querySelectorAll('.note').forEach(n => n.remove())
 // })
 
-document.querySelector('#search-text').addEventListener('input', function (e) {
+document.querySelector('#search-text').addEventListener('input', (e) => {
     filters.searchText = e.target.value
     renderTodos(notes, filters)
 })
 
-document.querySelector('#filterBy').addEventListener('change', function (e) {
+document.querySelector('#filterBy').addEventListener('change', (e) => {
     filters.sortBy = e.target.value
     renderNotes(notes, filters)
 })
 
-window.addEventListener('storage', function (e) {
+window.addEventListener('storage', (e) => {
     if (e.key === 'notes') {
         notes = JSON.parse(e.newValue)
         renderNotes(notes, filters)

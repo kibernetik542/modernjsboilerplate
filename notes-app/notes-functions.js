@@ -1,18 +1,18 @@
+'use strict'
+
 // Read existing notes from localStorage
-const getSavedNotes = function () {
+const getSavedNotes = () => {
     const notesJSON = localStorage.getItem('notes')
-    if (notesJSON !== null) {
-        return JSON.parse(notesJSON)
-    } else {
+    try {
+        return notesJSON ? JSON.parse(notesJSON) : []  
+    } catch (error) {
         return []
-    }
+    }   
 }
 
 // Remove a note from the list
-const removeNote = function (id) {
-    const noteIndex = notes.findIndex(function (note) {
-        return note.id === id
-    })
+const removeNote = (id) => {
+    const noteIndex = notes.findIndex((note) => note.id === id)
     if (noteIndex > -1) {
         notes.splice(noteIndex, 1)
     }
@@ -34,7 +34,7 @@ const uuid = function () {
 }
 
 // Generate the DOM structure for a note
-const generateNoteDOM = function (n) {
+const generateNoteDOM = (n) => {
     const noteEl = document.createElement('div')
     const textEl = document.createElement('a')
     const button = document.createElement('button')
@@ -42,7 +42,7 @@ const generateNoteDOM = function (n) {
     // Setup the remove note button
     button.textContent = 'x'
     noteEl.appendChild(button)
-    button.addEventListener('click', function () {
+    button.addEventListener('click', () => {
         removeNote(n.id)
         saveNotes(notes)
         renderNotes(notes, filters)
@@ -64,7 +64,8 @@ const generateNoteDOM = function (n) {
 // Render application notes
 const renderNotes = (notes, filters) => {
     notes = sortNotes(notes, filters.sortBy)
-    const filteredNotes = notes.filter(n => n.title.toLowerCase().includes(filters.searchText.toLowerCase()))
+    const filteredNotes = notes.filter(n => 
+        n.title.toLowerCase().includes(filters.searchText.toLowerCase()))
 
     document.querySelector('#notes').innerHTML = ''
 
@@ -75,7 +76,7 @@ const renderNotes = (notes, filters) => {
 }
 
 // Save the notes to localStorage
-const saveNotes = function (notes) {
+const saveNotes = (notes) => {
     localStorage.setItem('notes', JSON.stringify(notes))
 }
 
@@ -85,7 +86,7 @@ const generateLastEdited = timestamp => `Last edited ${moment(timestamp).fromNow
 // Sort your notes by one of ways from dropdown
 const sortNotes = function (notes, sortBy) {
     if (sortBy === 'byEdited') {
-        return notes.sort(function (a, b) {
+        return notes.sort((a, b) => {
             if (a.updatedAt > b.updatedAt) {
                 return -1
             } else if (a.updatedAt < b.updatedAt) {
@@ -95,7 +96,7 @@ const sortNotes = function (notes, sortBy) {
             }
         })
     } else if (sortBy === 'byCreated') {
-        return notes.sort(function (a, b) {
+        return notes.sort((a, b) => {
             if (a.createdAt > b.createdAt) {
                 return -1
             } else if (a.createdAt < b.createdAt) {
@@ -105,7 +106,7 @@ const sortNotes = function (notes, sortBy) {
             }
         })
     } else if (sortBy === 'alphabetical') {
-        return notes.sort(function (a, b) {
+        return notes.sort((a, b) => {
             if (a.title.toLowerCase() < b.title.toLowerCase()) {
                 return -1
             } else if (a.title.toLowerCase() > b.title.toLowerCase()) {
