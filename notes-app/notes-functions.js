@@ -36,7 +36,7 @@ const uuid = function () {
 // Generate the DOM structure for a note
 const generateNoteDOM = function (n) {
     const noteEl = document.createElement('div')
-    const textEl = document.createElement('span')
+    const textEl = document.createElement('a')
     const button = document.createElement('button')
 
     // Setup the remove note button
@@ -55,6 +55,7 @@ const generateNoteDOM = function (n) {
         textEl.textContent = 'Unnamed note'
     }
 
+    textEl.setAttribute('href', `/edit.html#${n.id}`)
     noteEl.appendChild(textEl)
 
     return noteEl
@@ -62,6 +63,7 @@ const generateNoteDOM = function (n) {
 
 // Render application notes
 const renderNotes = (notes, filters) => {
+    notes = sortNotes(notes, filters.sortBy)
     const filteredNotes = notes.filter(n => n.title.toLowerCase().includes(filters.searchText.toLowerCase()))
 
     document.querySelector('#notes').innerHTML = ''
@@ -75,4 +77,44 @@ const renderNotes = (notes, filters) => {
 // Save the notes to localStorage
 const saveNotes = function (notes) {
     localStorage.setItem('notes', JSON.stringify(notes))
+}
+
+// Generate the last edited message
+const generateLastEdited = timestamp => `Last edited ${moment(timestamp).fromNow()}`
+
+// Sort your notes by one of ways from dropdown
+const sortNotes = function (notes, sortBy) {
+    if (sortBy === 'byEdited') {
+        return notes.sort(function (a, b) {
+            if (a.updatedAt > b.updatedAt) {
+                return -1
+            } else if (a.updatedAt < b.updatedAt) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+    } else if (sortBy === 'byCreated') {
+        return notes.sort(function (a, b) {
+            if (a.createdAt > b.createdAt) {
+                return -1
+            } else if (a.createdAt < b.createdAt) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+    } else if (sortBy === 'alphabetical') {
+        return notes.sort(function (a, b) {
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {
+                return -1
+            } else if (a.title.toLowerCase() > b.title.toLowerCase()) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+    } else {
+        return notes
+    }
 }
