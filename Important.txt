@@ -1,0 +1,9 @@
+1-- Arrow functions does not bind this
+
+Reverse string...
+
+let reverseString = (str) => [...String(str)].reverse().join(''); 
+console.log(reverseString('Hello World'));							"dlroW olleH"
+console.log(reverseString([1,2,3,4]));							   	"4,3,2,1"
+
+A closure is the combination of a function and the lexical environment within which that function was declared
