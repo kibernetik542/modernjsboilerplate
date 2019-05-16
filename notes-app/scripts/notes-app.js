@@ -59,8 +59,6 @@ const filters = {
     sortBy: 'byEdited'
 }
 
-renderNotes(notes, filters)
-
 document.querySelector('#add-note').addEventListener('click', (e) => {
     const timestamp = moment().valueOf()
     notes.push({
@@ -81,7 +79,7 @@ document.querySelector('#add-note').addEventListener('click', (e) => {
 
 document.querySelector('#search-text').addEventListener('input', (e) => {
     filters.searchText = e.target.value
-    renderTodos(notes, filters)
+    renderNotes(notes, filters)
 })
 
 document.querySelector('#filterBy').addEventListener('change', (e) => {
@@ -95,6 +93,8 @@ window.addEventListener('storage', (e) => {
         renderNotes(notes, filters)
     }
 })
+
+renderNotes(notes, filters)
 
 // const now = moment()
 // now.add(1, 'week').subtract(20, 'days')
