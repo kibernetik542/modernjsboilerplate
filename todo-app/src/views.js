@@ -4,10 +4,10 @@ import { getFilters} from './filters'
 // Render application todos based on filter
 const renderTodos = () => {
     const todoEl = document.querySelector('#todos')
-    const filters = getFilters()
+    const {searchText, hideCompleted } = getFilters()
     const filteredTodos = getTodos().filter(t => {
-        const searchTextMatch = t.text.toLowerCase().includes(filters.searchText.toLowerCase())
-        const hideCompletedMatch = !filters.hideCompleted || !t.completed
+        const searchTextMatch = t.text.toLowerCase().includes(searchText.toLowerCase())
+        const hideCompletedMatch = !hideCompleted || !t.completed
         return searchTextMatch && hideCompletedMatch
     })
 
