@@ -1,24 +1,11 @@
-'use strict'
-
-// Fetch existing todos from localStorage
-const getSavedTodos = () => {
-    const todosJSON = localStorage.getItem('todos')
-    try {
-        return todosJSON ? JSON.parse(todosJSON) : []
-    } catch (error) {
-        return []
-    }
-}
-
-// Save todos to localStorage
-const saveTodos = (todos) => {
-    localStorage.setItem('todos', JSON.stringify(todos))
-}
+import { getTodos, toggleTodo, removeTodo } from './todos'
+import { getFilters} from './filters'
 
 // Render application todos based on filter
-const renderTodos = (todos, filters) => {
+const renderTodos = () => {
     const todoEl = document.querySelector('#todos')
-    const filteredTodos = todos.filter(t => {
+    const filters = getFilters()
+    const filteredTodos = getTodos().filter(t => {
         const searchTextMatch = t.text.toLowerCase().includes(filters.searchText.toLowerCase())
         const hideCompletedMatch = !filters.hideCompleted || !t.completed
         return searchTextMatch && hideCompletedMatch
@@ -41,36 +28,6 @@ const renderTodos = (todos, filters) => {
     }
 }
 
-const uuidTodo = () => {
-    var uuid = "",
-        i, random;
-    for (i = 0; i < 32; i++) {
-        random = Math.random() * 16 | 0;
-
-        if (i == 8 || i == 12 || i == 16 || i == 20) {
-            uuid += "-"
-        }
-        uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
-    }
-    return uuid;
-}
-
-// Remove element by given id
-const removeTodo = (id) => {
-    const todoIndex = todos.findIndex((todo) => todo.id === id)
-    if (todoIndex > -1) {
-        todos.splice(todoIndex, 1)
-    }
-}
-
-// Change completeness status of todos
-const toggleTodo = (id) => {
-    const toggleIndex = todos.find((todo) => todo.id === id)
-    if (toggleIndex) {
-        toggleIndex.completed = !toggleIndex.completed
-    }
-}
-
 // Get the DOM elements for an individual note
 const generateTodoDOM = (t) => {
     const todoEl = document.createElement('label')
@@ -85,8 +42,7 @@ const generateTodoDOM = (t) => {
     containerEl.appendChild(checkbox)
     checkbox.addEventListener('change', () => {
         toggleTodo(t.id)
-        saveTodos(todos)
-        renderTodos(todos, filters)
+        renderTodos()
     })
 
     // Setup todo text
@@ -104,8 +60,7 @@ const generateTodoDOM = (t) => {
     todoEl.appendChild(removeButton)
     removeButton.addEventListener('click', () => {
         removeTodo(t.id)
-        saveTodos(todos)
-        renderTodos(todos, filters)
+        renderTodos()
     })
 
     return todoEl
@@ -119,3 +74,5 @@ const generateSummaryDOM = (incomplete) => {
     summary.textContent = `You have ${incomplete.length} todo${plural} left`
     return summary
 }
+
+export { generateTodoDOM, renderTodos, generateSummaryDOM }
